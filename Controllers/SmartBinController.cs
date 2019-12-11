@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -11,6 +12,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SMART_BIN.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SmartBinController : Controller

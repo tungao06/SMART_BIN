@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using SMART_BIN.Model;
 using SMART_BIN.Services;
 
@@ -33,7 +36,35 @@ namespace SMART_BIN
 
             services.AddSingleton<ISmartBinDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<SmartBinDatabaseSettings>>().Value);
+            services.AddCors();
 
+            // configure strongly typed settings objects
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
+            // configure DI for application services
+            services.AddScoped<IAccountService, AccountService>();
             services.AddSingleton<SmartBinServices>();
             services.AddSingleton<StaffServices>();
             services.AddSingleton<UserServices>();
@@ -53,7 +84,13 @@ namespace SMART_BIN
                 app.UseHsts();
             }
 
-            //app.UseRouting();
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
