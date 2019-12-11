@@ -22,8 +22,8 @@ namespace SMART_BIN.Services
         public List<Staff> Get() =>
             _staff.Find(smartbin => true).ToList();
 
-        public Staff Get(string id) =>
-            _staff.Find<Staff>(staff => staff.Id == id).FirstOrDefault();
+        public Staff Get(string ids) =>
+            _staff.Find<Staff>(staff => staff.Ids == ids).FirstOrDefault();
 
         public Staff Create(Staff staff)
         {
@@ -31,8 +31,8 @@ namespace SMART_BIN.Services
             return staff;
         }
 
-        public void Update(string id, Staff staffIn) =>
-            _staff.ReplaceOne(staff => staff.Id == id, staffIn);
+        public void Update(string ids, Staff staffIn) =>
+            _staff.ReplaceOne(staff => staff.Ids == ids, staffIn);
 
         public void Remove(Staff staffIn) =>
             _staff.DeleteOne(staff => staff.Id == staffIn.Id);

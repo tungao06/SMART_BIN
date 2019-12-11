@@ -13,7 +13,9 @@ namespace SMART_BIN.Model
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        [BsonIgnoreIfNull]
         public string Ids { get; set; }
+
         public string Name { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }

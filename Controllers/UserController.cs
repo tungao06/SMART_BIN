@@ -15,16 +15,55 @@ namespace SMART_BIN.Controllers
     public class UserController : Controller
 
     {
-        private readonly UserServices _staffService;
+        private readonly UserServices _userService;
 
-        public UserController(UserServices staffService)
+        public UserController(UserServices userService)
         {
-            _staffService = staffService;
+            _userService = userService;
         }
 
         //api/Staff
-        [HttpGet]
-        public ActionResult<List<User>> Get() =>
-            _staffService.Get();
+        [HttpGet(Name = "GetUser")]
+        public ActionResult<List<User>> GetUser() =>
+            _userService.Get();
+
+        [HttpGet("{ids}", Name = "GetUserByIds")]
+        public ActionResult<User> GetUserByIds(string ids)
+        {
+            var user = _userService.Get(ids);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
+        //api/User
+        [HttpPost]
+        public ActionResult<User> CreateUser(User user)
+        {
+            _userService.Create(user);
+
+            return CreatedAtRoute("Get", new { id = user.Id.ToString() }, user);
+        }
+
+        //api/Staff/{Ids}
+        [HttpPut("{ids}")]
+        public ActionResult<User> UpdateUser(string ids, User userIn)
+        {
+            var user = _userService.Get(ids);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            userIn.Id = user.Id;
+            _userService.Update(ids, userIn);
+
+            return Ok(userIn);
+        }
     }
 }

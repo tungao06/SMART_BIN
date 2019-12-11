@@ -22,8 +22,8 @@ namespace SMART_BIN.Services
         public List<User> Get() =>
             _user.Find(user => true).ToList();
 
-        public User Get(string id) =>
-            _user.Find<User>(user => user.Id == id).FirstOrDefault();
+        public User Get(string ids) =>
+            _user.Find<User>(user => user.Ids == ids).FirstOrDefault();
 
         public User Create(User user)
         {
@@ -31,8 +31,8 @@ namespace SMART_BIN.Services
             return user;
         }
 
-        public void Update(string id, User userIn) =>
-            _user.ReplaceOne(user => user.Id == id, userIn);
+        public void Update(string ids, User userIn) =>
+            _user.ReplaceOne(user => user.Ids == ids, userIn);
 
         public void Remove(User userIn) =>
             _user.DeleteOne(user => user.Id == userIn.Id);

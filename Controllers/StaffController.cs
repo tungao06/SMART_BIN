@@ -23,46 +23,47 @@ namespace SMART_BIN.Controllers
         }
 
         //api/Staff
-        [HttpGet]
-        public ActionResult<List<Staff>> Get() =>
+        [HttpGet(Name = "GetStaff")]
+        public ActionResult<List<Staff>> GetStaff() =>
             _staffService.Get();
 
-        [HttpGet("{id:length(24)}", Name = "GetStaff")]
-        public ActionResult<Staff> Get(string id)
+        [HttpGet("{ids}", Name = "GetStaffByIds")]
+        public ActionResult<Staff> GetStaffByIds(string ids)
         {
-            var staff = _staffService.Get(id);
+            var staff = _staffService.Get(ids);
 
             if (staff == null)
             {
                 return NotFound();
             }
 
-            return staff;
+            return Ok(staff);
         }
 
         //api/Staff
         [HttpPost]
-        public ActionResult<Staff> Create(Staff staff)
+        public ActionResult<Staff> CreateStaff(Staff staff)
         {
             _staffService.Create(staff);
 
             return CreatedAtRoute("GetStaff", new { id = staff.Id.ToString() }, staff);
         }
 
-        //api/Staff
-        [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, Staff staffIn)
+        //api/Staff/{Ids}
+        [HttpPut("{ids}")]
+        public ActionResult<Staff> UpdateStaff(string ids, Staff staffIn)
         {
-            var staff = _staffService.Get(id);
+            var staff = _staffService.Get(ids);
 
             if (staff == null)
             {
                 return NotFound();
             }
 
-            _staffService.Update(id, staffIn);
+            staffIn.Id = staff.Id;
+            _staffService.Update(ids, staffIn);
 
-            return NoContent();
+            return Ok(staffIn);
         }
     }
 }
