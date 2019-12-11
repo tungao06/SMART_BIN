@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SMART_BIN.Model;
+using SMART_BIN.Services;
 
 namespace SMART_BIN
 {
@@ -25,6 +27,16 @@ namespace SMART_BIN
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // requires using Microsoft.Extensions.Options
+            services.Configure<SmartBinDatabaseSettings>(
+                Configuration.GetSection(nameof(SmartBinDatabaseSettings)));
+
+            services.AddSingleton<ISmartBinDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<SmartBinDatabaseSettings>>().Value);
+
+            services.AddSingleton<SmartBinServices>();
+            services.AddSingleton<StaffServices>();
+            services.AddSingleton<UserServices>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -41,6 +53,7 @@ namespace SMART_BIN
                 app.UseHsts();
             }
 
+            //app.UseRouting();
             app.UseHttpsRedirection();
             app.UseMvc();
         }

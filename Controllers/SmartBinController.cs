@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using SMART_BIN.Model;
+using SMART_BIN.Services;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SMART_BIN.Controllers
@@ -14,73 +15,67 @@ namespace SMART_BIN.Controllers
     [ApiController]
     public class SmartBinController : Controller
     {
-        // GET api/SmartBin
+        private readonly SmartBinServices _smartbinService;
+
+        public SmartBinController(SmartBinServices smartbinService)
+        {
+            _smartbinService = smartbinService;
+        }
+
+        //api/SmartBin
         [HttpGet]
-        public ActionResult<string> Get()
-        {
-            var client = new MongoClient("mongodb+srv://TungAo:Chayanun06@smartbin-mecov.gcp.mongodb.net/SmartBin?retryWrites=true&w=majority");
+        public ActionResult<List<SmartBin>> Get() =>
+            _smartbinService.Get();
 
-            IMongoDatabase db = client.GetDatabase("SmartBin");
-            var dbList = db.ListCollections().ToList();
-            var things = db.GetCollection<BsonDocument>("SmartBin");
-            var resultDoc = things.Find(new BsonDocument()).ToList();
+        //[HttpGet("{id:length(24)}", Name = "GetBook")]
+        //public ActionResult<Book> Get(string id)
+        //{
+        //    var book = _bookService.Get(id);
 
-            return Ok(resultDoc);
-        }
+        //    if (book == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-        // GET api/SmartBin/GetStaff
-        [HttpGet]
-        [Route("GetStaff")]
-        public ActionResult<string> GetStaff()
-        {
-            var client = new MongoClient("mongodb+srv://TungAo:Chayanun06@smartbin-mecov.gcp.mongodb.net/SmartBin?retryWrites=true&w=majority");
+        //    return book;
+        //}
 
-            IMongoDatabase db = client.GetDatabase("SmartBin");
-            var dbList = db.ListCollections().ToList();
-            var things = db.GetCollection<BsonDocument>("Staff");
-            var resultDoc = things.Find(new BsonDocument()).ToList();
+        //[HttpPost]
+        //public ActionResult<Book> Create(Book book)
+        //{
+        //    _bookService.Create(book);
 
-            return Ok(resultDoc);
-        }
+        //    return CreatedAtRoute("GetBook", new { id = book.Id.ToString() }, book);
+        //}
 
-        // GET api/SmartBin/GetUser
-        [HttpGet]
-        [Route("GetUser")]
-        public ActionResult<string> GetUser()
-        {
-            var client = new MongoClient("mongodb+srv://TungAo:Chayanun06@smartbin-mecov.gcp.mongodb.net/SmartBin?retryWrites=true&w=majority");
+        //[HttpPut("{id:length(24)}")]
+        //public IActionResult Update(string id, Book bookIn)
+        //{
+        //    var book = _bookService.Get(id);
 
-            IMongoDatabase db = client.GetDatabase("SmartBin");
-            var dbList = db.ListCollections().ToList();
-            var things = db.GetCollection<BsonDocument>("User");
-            var resultDoc = things.Find(new BsonDocument()).ToList();
+        //    if (book == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(resultDoc);
-        }
+        //    _bookService.Update(id, bookIn);
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return Ok();
-        }
+        //    return NoContent();
+        //}
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        //[HttpDelete("{id:length(24)}")]
+        //public IActionResult Delete(string id)
+        //{
+        //    var book = _bookService.Get(id);
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        //    if (book == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        //    _bookService.Remove(book.Id);
+
+        //    return NoContent();
+        //}
     }
 }

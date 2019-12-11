@@ -10,9 +10,12 @@ namespace SMART_BIN.Model
     public class Staff
     {
         [BsonId]
-        public ObjectId _id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
 
         public string Ids { get; set; }
         public string Name { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
     }
 }

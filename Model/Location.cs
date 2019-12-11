@@ -7,7 +7,7 @@ namespace SMART_BIN.Model
 {
     public class Location
     {
-        public int Latitude { get; set; }
-        public int Longtitude { get; set; }
+        public string Latitude { get; set; }
+        public string Longtitude { get; set; }
     }
 }
