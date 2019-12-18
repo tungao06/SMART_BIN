@@ -22,8 +22,8 @@ namespace SMART_BIN.Services
         public List<Staff> Get() =>
             _staff.Find(smartbin => true).ToList();
 
-        public Staff Get(string ids) =>
-            _staff.Find<Staff>(staff => staff.Ids == ids).FirstOrDefault();
+        public Staff Get(string uid) =>
+            _staff.Find<Staff>(staff => staff.Uid == uid).FirstOrDefault();
 
         public Staff Create(Staff staff)
         {

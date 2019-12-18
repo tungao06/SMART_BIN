@@ -27,10 +27,10 @@ namespace SMART_BIN.Controllers
         public ActionResult<List<Staff>> GetStaff() =>
             _staffService.Get();
 
-        [HttpGet("{ids}", Name = "GetStaffByIds")]
-        public ActionResult<Staff> GetStaffByIds(string ids)
+        [HttpGet("{uid}", Name = "GetStaffByUid")]
+        public ActionResult<Staff> GetStaffByUid(string uid)
         {
-            var staff = _staffService.Get(ids);
+            var staff = _staffService.Get(uid);
 
             if (staff == null)
             {
