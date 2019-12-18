@@ -34,6 +34,18 @@ namespace SMART_BIN
             services.AddSingleton<ISmartBinDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<SmartBinDatabaseSettings>>().Value);
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("VueCorsPolicy", builder =>
+                {
+                    builder
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials()
+                      .WithOrigins("http://localhost:8080");
+                });
+            });
+
             services.AddSingleton<SmartBinServices>();
             services.AddSingleton<StaffServices>();
             services.AddSingleton<UserServices>();
@@ -54,6 +66,7 @@ namespace SMART_BIN
             }
 
             //app.UseRouting();
+            app.UseCors("VueCorsPolicy");
             app.UseHttpsRedirection();
             app.UseMvc();
         }
