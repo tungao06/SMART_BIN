@@ -6,6 +6,7 @@
     <UserSecretsId>d37d14bb-67f2-4f8a-bcb0-bb87a10cb3ba</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
+    <StartupObject>SMART_BIN.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
