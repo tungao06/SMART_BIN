@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using Microsoft.AspNetCore.Mvc;
 using SMART_BIN.Model;
 using SMART_BIN.Services;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Collections.Generic;
 
 namespace SMART_BIN.Controllers
 {
@@ -23,59 +17,55 @@ namespace SMART_BIN.Controllers
         }
 
         //api/SmartBin
-        [HttpGet]
-        public ActionResult<List<SmartBin>> Get() =>
+        [HttpGet(Name = "GetSmartBin")]
+        public ActionResult<List<SmartBin>> GetSmartBin() =>
             _smartbinService.Get();
 
-        //[HttpGet("{id:length(24)}", Name = "GetBook")]
-        //public ActionResult<Book> Get(string id)
-        //{
-        //    var book = _bookService.Get(id);
+        [HttpGet("{uid}", Name = "GetSmartBinByUid")]
+        public ActionResult<SmartBin> GetSmartBinByUid(string uid)
+        {
+            var smartbin = _smartbinService.Get(uid);
 
-        //    if (book == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (smartbin == null)
+            {
+                return NotFound();
+            }
 
-        //    return book;
-        //}
+            return Ok(smartbin);
+        }
 
-        //[HttpPost]
-        //public ActionResult<Book> Create(Book book)
-        //{
-        //    _bookService.Create(book);
+        //api/SmartBin
+        [HttpPost]
+        public ActionResult<SmartBin> CreateSmartBin(SmartBin smartbin)
+        {
+            _smartbinService.Create(smartbin);
 
-        //    return CreatedAtRoute("GetBook", new { id = book.Id.ToString() }, book);
-        //}
+            return CreatedAtRoute("GetSmartBin", new { id = smartbin.Id.ToString() }, smartbin);
+        }
 
-        //[HttpPut("{id:length(24)}")]
-        //public IActionResult Update(string id, Book bookIn)
-        //{
-        //    var book = _bookService.Get(id);
+        //api/SmartBin/{Ids}
+        [HttpPut("{ids}")]
+        public ActionResult<SmartBin> UpdateSmartBin(string ids, SmartBin smartbin)
+        {
+            var user = _smartbinService.Get(ids);
 
-        //    if (book == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-        //    _bookService.Update(id, bookIn);
+            smartbin.Ids = user.Ids;
+            _smartbinService.Update(ids, smartbin);
 
-        //    return NoContent();
-        //}
+            return Ok(smartbin);
+        }
 
-        //[HttpDelete("{id:length(24)}")]
-        //public IActionResult Delete(string id)
-        //{
-        //    var book = _bookService.Get(id);
+        [HttpDelete("{ids}")]
+        public ActionResult<SmartBin> Delete(string ids)
+        {
+            _smartbinService.Remove(ids);
 
-        //    if (book == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _bookService.Remove(book.Id);
-
-        //    return NoContent();
-        //}
+            return Ok();
+        }
     }
 }
