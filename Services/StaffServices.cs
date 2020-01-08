@@ -1,9 +1,7 @@
 ﻿using MongoDB.Driver;
 using SMART_BIN.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SMART_BIN.Services
 {
@@ -31,8 +29,8 @@ namespace SMART_BIN.Services
             return staff;
         }
 
-        public void Update(string ids, Staff staffIn) =>
-            _staff.ReplaceOne(staff => staff.Ids == ids, staffIn);
+        public void Update(string Uid, Staff staffIn) =>
+            _staff.ReplaceOne(staff => staff.Uid == Uid, staffIn);
 
         public void Remove(Staff staffIn) =>
             _staff.DeleteOne(staff => staff.Id == staffIn.Id);

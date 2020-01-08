@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using Microsoft.AspNetCore.Mvc;
 using SMART_BIN.Model;
 using SMART_BIN.Services;
+using System.Collections.Generic;
 
 namespace SMART_BIN.Controllers
 {
@@ -49,11 +44,11 @@ namespace SMART_BIN.Controllers
             return CreatedAtRoute("GetStaff", new { id = staff.Id.ToString() }, staff);
         }
 
-        //api/Staff/{Ids}
-        [HttpPut("{ids}")]
-        public ActionResult<Staff> UpdateStaff(string ids, Staff staffIn)
+        //api/Staff/{Uid}
+        [HttpPut("{Uid}")]
+        public ActionResult<Staff> UpdateStaff(string Uid, Staff staffIn)
         {
-            var staff = _staffService.Get(ids);
+            var staff = _staffService.Get(Uid);
 
             if (staff == null)
             {
@@ -61,7 +56,7 @@ namespace SMART_BIN.Controllers
             }
 
             staffIn.Id = staff.Id;
-            _staffService.Update(ids, staffIn);
+            _staffService.Update(Uid, staffIn);
 
             return Ok(staffIn);
         }
