@@ -8,7 +8,6 @@ namespace SMART_BIN.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : Controller
-
     {
         private readonly UserServices _userService;
 
@@ -17,15 +16,15 @@ namespace SMART_BIN.Controllers
             _userService = userService;
         }
 
-        //api/Staff
+        //api/User
         [HttpGet(Name = "GetUser")]
         public ActionResult<List<User>> GetUser() =>
             _userService.Get();
 
         [HttpGet("{ids}", Name = "GetUserByIds")]
-        public ActionResult<User> GetUserByIds(string ids)
+        public ActionResult<User> GetUserByIds(string uid)
         {
-            var user = _userService.Get(ids);
+            var user = _userService.Get(uid);
 
             if (user == null)
             {
@@ -41,14 +40,14 @@ namespace SMART_BIN.Controllers
         {
             _userService.Create(user);
 
-            return CreatedAtRoute("Get", new { id = user.Id.ToString() }, user);
+            return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
         }
 
-        //api/Staff/{Ids}
-        [HttpPut("{ids}")]
-        public ActionResult<User> UpdateUser(string ids, User userIn)
+        //api/Staff/{Uid}
+        [HttpPut("{Uid}")]
+        public ActionResult<User> UpdateUser(string Uid, User userIn)
         {
-            var user = _userService.Get(ids);
+            var user = _userService.Get(Uid);
 
             if (user == null)
             {
@@ -56,7 +55,7 @@ namespace SMART_BIN.Controllers
             }
 
             userIn.Id = user.Id;
-            _userService.Update(ids, userIn);
+            _userService.Update(Uid, userIn);
 
             return Ok(userIn);
         }
