@@ -21,7 +21,7 @@ namespace SMART_BIN.Controllers
         public ActionResult<List<User>> GetUser() =>
             _userService.Get();
 
-        [HttpGet("{ids}", Name = "GetUserByIds")]
+        [HttpGet("{uid}", Name = "GetUserByIds")]
         public ActionResult<User> GetUserByIds(string uid)
         {
             var user = _userService.Get(uid);

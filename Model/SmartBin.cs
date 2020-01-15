@@ -7,10 +7,10 @@ namespace SMART_BIN.Model
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string Id { get; set; } = "";
 
-        public string Ids { get; set; }
-        public string Location { get; set; }
-        public string Status { get; set; }
+        public string Ids { get; set; } = "";
+        public string Location { get; set; } = "";
+        public string Status { get; set; } = "";
     }
 }
