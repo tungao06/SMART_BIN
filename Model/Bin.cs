@@ -5,10 +5,7 @@ namespace SMART_BIN.Model
 {
     public class Bin
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; } = "";
-
-        public string Type { get; set; } = "";
+        public long GoodBin { get; set; } = 0;
+        public long BadBin { get; set; } = 0;
     }
 }

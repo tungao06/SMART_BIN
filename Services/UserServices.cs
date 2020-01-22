@@ -34,6 +34,9 @@ namespace SMART_BIN.Services
         public void Update(string Uid, User userIn) =>
             _user.ReplaceOne(user => user.Uid == Uid, userIn);
 
+        public void UpdateBin(string Uid, User userIn) =>
+            _user.ReplaceOne(user => user.Uid == Uid, userIn);
+
         public void Remove(User userIn) =>
             _user.DeleteOne(user => user.Id == userIn.Id);
 

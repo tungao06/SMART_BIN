@@ -43,7 +43,7 @@ namespace SMART_BIN.Controllers
             return CreatedAtRoute("GetUser", new { id = user.Id.ToString() }, user);
         }
 
-        //api/Staff/{Uid}
+        //api/User/{Uid}
         [HttpPut("{Uid}")]
         public ActionResult<User> UpdateUser(string Uid, User userIn)
         {
@@ -59,5 +59,24 @@ namespace SMART_BIN.Controllers
 
             return Ok(userIn);
         }
+
+        ////api/User/{Uid}
+        //[HttpPut("{Uid}")]
+        //public ActionResult<User> UpdateBinUser(string Uid, User userIn)
+        //{
+        //    var user = _userService.Get(Uid);
+
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    userIn.Id = user.Id;
+        //    _userService.Update(Uid, userIn);
+
+        //    return Ok(userIn);
+        //}
+
+
     }
 }

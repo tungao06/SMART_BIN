@@ -22,12 +22,12 @@ namespace SMART_BIN.Controllers
             _binService.Get();
 
         //api/Bin
-        [HttpPost]
-        public ActionResult<Bin> CreateBin(Bin bin)
-        {
-            _binService.Create(bin);
+    //    [HttpPost]
+    //    public ActionResult<Bin> CreateBin(Bin bin)
+    //    {
+    //        _binService.Create(bin);
 
-            return CreatedAtRoute("GetBin", new { id = bin.Id.ToString() }, bin);
-        }
+    //        return CreatedAtRoute("GetBin", new { id = bin.Id.ToString() }, bin);
+    //    }
     }
 }

@@ -15,7 +15,6 @@ namespace SMART_BIN.Controllers
         {
             _smartbinService = smartbinService;
         }
-
         //api/SmartBin
         [HttpGet(Name = "GetSmartBin")]
         public ActionResult<List<SmartBin>> GetSmartBin() =>

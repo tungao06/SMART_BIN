@@ -20,8 +20,8 @@ namespace SMART_BIN.Services
         public List<Bin> Get() =>
             _bin.Find(bin => true).ToList();
 
-        public Bin Get(string id) =>
-            _bin.Find<Bin>(bin => bin.Id == id).FirstOrDefault();
+        //public Bin Get(string id) =>
+        //    _bin.Find<Bin>(bin => bin.Id == id).FirstOrDefault();
 
         public Bin Create(Bin bin)
         {
@@ -29,13 +29,13 @@ namespace SMART_BIN.Services
             return bin;
         }
 
-        public void Update(string id, Bin binIn) =>
-            _bin.ReplaceOne(bin => bin.Id == id, binIn);
+        //public void Update(string id, Bin binIn) =>
+        //    _bin.ReplaceOne(bin => bin.Id == id, binIn);
 
-        public void Remove(Bin binIn) =>
-            _bin.DeleteOne(bin => bin.Id == binIn.Id);
+        //public void Remove(Bin binIn) =>
+        //    _bin.DeleteOne(bin => bin.Id == binIn.Id);
 
-        public void Remove(string id) =>
-            _bin.DeleteOne(bin => bin.Id == id);
+        //public void Remove(string id) =>
+        //    _bin.DeleteOne(bin => bin.Id == id);
     }
 }

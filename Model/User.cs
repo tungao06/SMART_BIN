@@ -19,6 +19,6 @@ namespace SMART_BIN.Model
         public string Email { get; set; } = "";
         public string Phone { get; set; } = "";
         public string Photo { get; set; } = "";
-        public int Point { get; set; } = 0; 
+        public ICollection<Bin> Bin { get; set; }
     }
 }
