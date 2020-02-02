@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Firebase.Database;
+using Firebase.Database.Query;
+using Microsoft.AspNetCore.Mvc;
 using SMART_BIN.Model;
-using SMART_BIN.Services;
+using System.Reactive.Linq;
+using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 namespace SMART_BIN.Controllers
@@ -9,25 +13,67 @@ namespace SMART_BIN.Controllers
     [ApiController]
     public class BinController : Controller
     {
-        private readonly BinServices _binService;
+        //public BinController(BinServices binService)
+        //{
+        //    _binService = binService;
+        //}
 
-        public BinController(BinServices binService)
+        //api/Bin
+        [HttpGet]
+        public ActionResult<Bin> GetBinAsync()
         {
-            _binService = binService;
+            //IFirebaseConfig config = new FirebaseConfig
+            //{
+            //    AuthSecret = "rOu2qW7xwYDz9jD7RCAHqnpFfyYdVTuTHQcJ0TXL",
+            //    BasePath = "https://smartbin-95f7a.firebaseio.com/"
+            //};
+
+            //IFirebaseClient client = new FirebaseClient(config);
+            //FirebaseResponse response = await client.GetAsync("bin");
+            //Bin todo = response.ResultAs<Bin>();
+
+            //return todo;
+
+            var auth = "rOu2qW7xwYDz9jD7RCAHqnpFfyYdVTuTHQcJ0TXL"; // your app secret
+            var firebaseClient = new FirebaseClient(
+              "https://smartbin-95f7a.firebaseio.com/",
+              new FirebaseOptions
+              {
+                  AuthTokenAsyncFactory = () => Task.FromResult(auth)
+              });
+
+            var dinos = firebaseClient
+                      .Child("bin")
+                      .OnceAsync<Bin>();
+
+            return Ok(dinos.Result);
         }
 
         //api/Bin
-        [HttpGet(Name = "GetBin")]
-        public ActionResult<List<Bin>> GetBin() =>
-            _binService.Get();
+        [HttpPost]
+        public Task<FirebaseObject<Bin>> CreateBin(Bin bin)
+        {
+            //IFirebaseConfig config = new FirebaseConfig
+            //{
+            //    AuthSecret = "rOu2qW7xwYDz9jD7RCAHqnpFfyYdVTuTHQcJ0TXL",
+            //    BasePath = "https://smartbin-95f7a.firebaseio.com/"
+            //};
 
-        //api/Bin
-    //    [HttpPost]
-    //    public ActionResult<Bin> CreateBin(Bin bin)
-    //    {
-    //        _binService.Create(bin);
+            //IFirebaseClient client = new FirebaseClient(config);
 
-    //        return CreatedAtRoute("GetBin", new { id = bin.Id.ToString() }, bin);
-    //    }
+            var auth = "rOu2qW7xwYDz9jD7RCAHqnpFfyYdVTuTHQcJ0TXL"; // your app secret
+            var firebaseClient = new FirebaseClient(
+              "https://smartbin-95f7a.firebaseio.com/",
+              new FirebaseOptions
+              {
+                  AuthTokenAsyncFactory = () => Task.FromResult(auth)
+              });
+
+            var dino = firebaseClient
+                           .Child("bin")
+                           .PostAsync(bin);
+
+            return dino;
+        }
     }
 }

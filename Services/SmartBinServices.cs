@@ -1,41 +1,81 @@
-﻿using MongoDB.Driver;
+﻿using Firebase.Database;
+using Firebase.Database.Query;
+using MongoDB.Driver;
 using SMART_BIN.Model;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SMART_BIN.Services
 {
     public class SmartBinServices
     {
         private readonly IMongoCollection<SmartBin> _smartbin;
+        private readonly FirebaseClient firebaseClient;
 
         public SmartBinServices(ISmartBinDatabaseSettings settings)
         {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
+            //var client = new MongoClient(settings.ConnectionString);
+            //var database = client.GetDatabase(settings.DatabaseName);
 
-            _smartbin = database.GetCollection<SmartBin>("SmartBin");
+            var auth = "rOu2qW7xwYDz9jD7RCAHqnpFfyYdVTuTHQcJ0TXL"; // your app secret
+            firebaseClient = new FirebaseClient(
+             "https://smartbin-95f7a.firebaseio.com/",
+             new FirebaseOptions
+             {
+                 AuthTokenAsyncFactory = () => Task.FromResult(auth)
+             });
+
+            //_smartbin = database.GetCollection<SmartBin>("SmartBin");
         }
 
-        public List<SmartBin> Get() =>
-            _smartbin.Find(smartbin => true).ToList();
-
-        public SmartBin Get(string ids) =>
-            _smartbin.Find<SmartBin>(smartbin => smartbin.Ids == ids).FirstOrDefault();
-
-        public SmartBin Create(SmartBin book)
+        public dynamic GetSmartBin()
         {
-            _smartbin.InsertOne(book);
-            return book;
+            var dinos = firebaseClient
+                          .Child("smartbin")
+                          .OnceAsync<SmartBin>();
+
+            return dinos.Result;
         }
 
-        public void Update(string ids, SmartBin smartbinIn) =>
-            _smartbin.ReplaceOne(smartbin => smartbin.Ids == ids, smartbinIn);
+        public async Task<dynamic> GetAsync(string ids)
+        {
+            //_smartbin.Find<SmartBin>(smartbin => smartbin.Ids == ids).FirstOrDefault();
+            var dinos = await firebaseClient
+                          .Child("smartbin")
+                          .OrderBy("Ids")
+                          .EqualTo(ids)
+                          .OnceAsync<SmartBin>();
+            
+            return dinos;
+        }
+
+        public Task<FirebaseObject<SmartBin>> Create(SmartBin smartbin)
+        {
+            var dino = firebaseClient
+                           .Child("smartbin")
+                           .PostAsync(smartbin);
+            return dino;
+        }
+
+        public async Task UpdateAsync(string ids, SmartBin smartbinIn)
+        {
+            await firebaseClient
+                  .Child("smartbin")
+                  .Child(ids)
+                  .PutAsync(smartbinIn);
+        }
 
         public void Remove(SmartBin smartbinIn) =>
-            _smartbin.DeleteOne(smartbin => smartbin.Id == smartbinIn.Id);
+            _smartbin.DeleteOne(smartbin => smartbin.Ids == smartbinIn.Ids);
 
-        public void Remove(string ids) =>
-            _smartbin.DeleteOne(smartbin => smartbin.Ids == ids);
+        public async Task Remove(string ids)
+        {
+           var dinos =  GetAsync(ids);
+
+            await firebaseClient
+                  .Child("smartbin")
+                  .Child($"{dinos.Result[0].Key}")
+                  .DeleteAsync();
+        }
     }
 }

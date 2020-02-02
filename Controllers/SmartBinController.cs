@@ -17,13 +17,15 @@ namespace SMART_BIN.Controllers
         }
         //api/SmartBin
         [HttpGet(Name = "GetSmartBin")]
-        public ActionResult<List<SmartBin>> GetSmartBin() =>
-            _smartbinService.Get();
+        public ActionResult<SmartBin> GetSmartBin() {
+            var list = _smartbinService.GetSmartBin();
+            return Ok(list);
+        }
 
-        [HttpGet("{uid}", Name = "GetSmartBinByUid")]
-        public ActionResult<SmartBin> GetSmartBinByUid(string uid)
+        [HttpGet("{ids}", Name = "GetSmartBinByIds")]
+        public ActionResult<SmartBin> GetSmartBinByIds(string ids)
         {
-            var smartbin = _smartbinService.Get(uid);
+            var smartbin = _smartbinService.GetAsync(ids);
 
             if (smartbin == null)
             {
@@ -37,25 +39,25 @@ namespace SMART_BIN.Controllers
         [HttpPost]
         public ActionResult<SmartBin> CreateSmartBin(SmartBin smartbin)
         {
-            _smartbinService.Create(smartbin);
+            var list = _smartbinService.Create(smartbin);
 
-            return CreatedAtRoute("GetSmartBin", new { id = smartbin.Id.ToString() }, smartbin);
+            return Ok(list.Result);
         }
 
         //api/SmartBin/{Ids}
         [HttpPut("{ids}")]
         public ActionResult<SmartBin> UpdateSmartBin(string ids, SmartBin smartbin)
         {
-            var user = _smartbinService.Get(ids);
+            var user = _smartbinService.GetAsync(ids);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            smartbin.Ids = user.Ids;
-            _smartbinService.Update(ids, smartbin);
-
+            smartbin.Ids = user.Result[0].Object.Ids;
+            _smartbinService.UpdateAsync(user.Result[0].Key, smartbin);
+            
             return Ok(smartbin);
         }
 
@@ -64,7 +66,7 @@ namespace SMART_BIN.Controllers
         {
             _smartbinService.Remove(ids);
 
-            return Ok();
+            return Ok(ids);
         }
     }
 }
